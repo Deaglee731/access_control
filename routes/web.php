@@ -16,14 +16,14 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
-})->middleware(['auth','isBanned'])->name('welcome');
+})->middleware(['auth', 'throttle:15,1', 'isBanned','can:view'])->name('welcome');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
-})->middleware(['auth', 'verified', 'isBanned'])->name('dashboard');
+})->middleware(['auth', 'verified','throttle:15,1', 'isBanned','can:view'])->name('dashboard');
 
 Route::view('/banned','banned')->name('banned');
-Route::middleware(['auth','isBanned'])->group(function () {
+Route::middleware(['auth','throttle:15,1', 'isBanned','can:view'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
